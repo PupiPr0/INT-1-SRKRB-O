@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script defer src="https://res.dkon.app/0web-sb.src/l2/cfg.js" data="dkon-guard"></script>
+
+    <title>Lineage 2 Interlude</title>
+    <style>
+        body {
+            background-image: url('https://filecloud-59-ars-cont-st.dkon.app/wp-cont/cloud59/Dkon.APP_normal_aca8dg3.jpeg');
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #online-status {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        #footer {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="title"></h1>
+    <h2 id="no_donate"></h2>
+
+    <button id="info-button"></button>
+    <button id="download-button"></button>
+
+    <div id="online-status">Загрузка статуса сервера...</div>
+    <div id="footer"></div>
+<br><center>
+    <script async src="https://res.dkon.app/dev/widget.js" data-dkon-post="La2WildMP/420870" data-width="60%" data-height="1020px"></script>
+    </center>
+    <script>
+       async function fetchOnlineStatus() {
+    try {
+        const response = await fetch('https://lineage2.crum.workers.dev/');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        document.getElementById('online-status').innerHTML = 
+            `Online: ${data.total}`;
+    } catch (error) {
+        console.error('Ошибка при загрузке статуса сервера:', error);
+        document.getElementById('online-status').innerHTML = 'Ошибка при загрузке статуса сервера.';
+    }
+}
+
+
+        async function loadLanguage() {
+            const userLang = navigator.language || navigator.userLanguage; 
+            const lang = userLang.split('-')[0]; // Получаем только код языка
+                        let localization;
+
+            try {
+                const response = await fetch(`https://res.DKon.app/0web-sb.src/l2/localint/${lang}.json`);
+                if (!response.ok) throw new Error('Language file not found');
+                localization = await response.json();
+            } catch (error) {
+                // Если файл не найден, загружаем английский по умолчанию
+                const response = await fetch('local/en.json');
+                localization = await response.json();
+            }
+
+            // Заполняем элементы на странице переводами
+            document.getElementById('title').innerText = localization.title;
+            document.getElementById('no_donate').innerText = localization.no_donate;
+            document.getElementById('info-button').innerText = localization.info_button;
+            document.getElementById('download-button').innerText = localization.download_button;
+            document.getElementById('footer').innerText = localization.footer;
+
+            // Устанавливаем обработчики для кнопок
+            document.getElementById('info-button').onclick = () => window.open('https://dkon.app/Interlude/post/420700', '_blank');
+            document.getElementById('download-button').onclick = () => window.open('https://dkon.app/go?cc=EktH8', '_blank');
+        }
+
+        loadLanguage().then(fetchOnlineStatus);
+    </script>
+
+</body>
+</html>
+
